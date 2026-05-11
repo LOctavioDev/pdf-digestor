@@ -1,0 +1,119 @@
+========================================================
+  pdf-digestor — Guía de despliegue a npm
+========================================================
+
+REQUISITOS PREVIOS
+------------------
+- Node.js >= 18
+- Cuenta en https://www.npmjs.com (con el email octaviodevtech@gmail.com)
+- 2FA activo en npm (recomendado)
+
+
+PASO 1 — COMPILAR EL PROYECTO
+------------------------------
+Desde la raíz del proyecto:
+
+  npm run build
+
+Esto ejecuta tsup y genera en /dist:
+  - index.js       (CommonJS)
+  - index.mjs      (ES Module)
+  - index.d.ts     (Declaraciones TypeScript)
+  - index.d.mts    (Declaraciones TypeScript ESM)
+  - *.map          (Source maps)
+
+Verifica que /dist exista y tenga los 6 archivos antes de continuar.
+
+
+PASO 2 — VERIFICAR TESTS Y TIPOS
+----------------------------------
+(Incluido en prepublishOnly, pero puedes hacerlo manualmente):
+
+  npm test
+  npm run typecheck
+
+Ambos deben pasar sin errores.
+
+
+PASO 3 — INICIAR SESIÓN EN NPM
+--------------------------------
+Si es la primera vez o tu sesión expiró:
+
+  npm login
+
+Ingresa:
+  Username : LOctavioDev  (o el que tengas registrado)
+  Password : tu contraseña
+  Email    : octaviodevtech@gmail.com
+  OTP      : código de tu autenticador (si tienes 2FA)
+
+Para verificar que la sesión es correcta:
+
+  npm whoami
+  → debe devolver tu nombre de usuario
+
+
+PASO 4 — REVISAR ANTES DE PUBLICAR (opcional pero recomendado)
+----------------------------------------------------------------
+Simula la publicación sin subir nada:
+
+  npm pack --dry-run
+
+Confirma que solo incluye archivos de /dist, package.json,
+README.md y LICENSE. NO debe incluir node_modules/ ni src/.
+
+Si quieres ver exactamente qué se subirá:
+
+  npm pack
+  tar -tzf pdf-digestor-1.0.0.tgz
+  rm pdf-digestor-1.0.0.tgz    ← limpia el archivo generado
+
+
+PASO 5 — PUBLICAR EN NPM
+--------------------------
+  npm publish --access public
+
+La flag --access public es obligatoria en la primera publicación
+de un paquete sin scope de organización.
+
+El script prepublishOnly se ejecuta automáticamente en este orden:
+  1. npm run typecheck
+  2. npm test
+  3. npm run build
+
+Si todo pasa, el paquete se sube y queda disponible en:
+  https://www.npmjs.com/package/pdf-digestor
+
+
+PASO 6 — ACTUALIZAR VERSIÓN (para futuras publicaciones)
+----------------------------------------------------------
+Usa los comandos estándar de semver:
+
+  npm version patch   → 1.0.0 → 1.0.1  (bug fixes)
+  npm version minor   → 1.0.0 → 1.1.0  (nuevas features)
+  npm version major   → 1.0.0 → 2.0.0  (breaking changes)
+
+Luego:
+
+  git push origin main --tags
+  npm publish --access public
+
+
+SOLUCIÓN DE PROBLEMAS COMUNES
+------------------------------
+Error: "You must be logged in..."
+  → Ejecuta: npm login
+
+Error: "Package name already taken"
+  → El nombre pdf-digestor podría estar ocupado en npm.
+    Opciones: usar scope (@LOctavioDev/pdf-digestor) o renombrar.
+    Para scope: npm publish --access public (igual)
+    Cambiar name en package.json a "@LOctavioDev/pdf-digestor"
+
+Error: "dist/ not found"
+  → Ejecuta primero: npm run build
+
+Error en prepublishOnly (tests fallan)
+  → Ejecuta: npm test   y corrige antes de publicar
+
+========================================================
