@@ -1,0 +1,53 @@
+{
+  "name": "pdf-digestor",
+  "version": "1.0.0",
+  "description": "Extract and transform PDF text into LLM-optimized formats (JSON, Markdown, plain text, log) to reduce token waste.",
+  "author": "",
+  "license": "ISC",
+  "keywords": [
+    "pdf",
+    "llm",
+    "tokens",
+    "ai",
+    "parse",
+    "markdown",
+    "json",
+    "text-extraction"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.6.2",
+    "@types/pdf-parse": "^1.1.5",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.9",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "pdf-parse": "^2.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
